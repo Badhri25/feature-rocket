@@ -1,1 +1,4 @@
 project_id = "fmozamzewiqooxrenbtp"
+
+[functions.generate-announcements]
+verify_jwt = true
