@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, LogOut, Loader2, Rocket } from "lucide-react";
+import { Plus, LogOut, Loader2, Rocket, BarChart3, Users, Code } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -110,16 +110,45 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        {/* Create Feature Button */}
-        <Button 
-          variant="hero" 
-          size="lg"
-          onClick={() => navigate("/create")}
-          className="mb-8"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          Create Feature
-        </Button>
+        {/* Navigation Cards */}
+        <div className="grid md:grid-cols-4 gap-4 mb-8">
+          <Button 
+            variant="hero" 
+            size="lg"
+            onClick={() => navigate("/create")}
+            className="h-auto py-6 flex-col gap-2"
+          >
+            <Plus className="w-6 h-6" />
+            Create Feature
+          </Button>
+          <Button 
+            variant="glass" 
+            size="lg"
+            onClick={() => navigate("/analytics")}
+            className="h-auto py-6 flex-col gap-2"
+          >
+            <BarChart3 className="w-6 h-6" />
+            Analytics
+          </Button>
+          <Button 
+            variant="glass" 
+            size="lg"
+            onClick={() => navigate("/team")}
+            className="h-auto py-6 flex-col gap-2"
+          >
+            <Users className="w-6 h-6" />
+            Team
+          </Button>
+          <Button 
+            variant="glass" 
+            size="lg"
+            onClick={() => navigate("/embed-setup")}
+            className="h-auto py-6 flex-col gap-2"
+          >
+            <Code className="w-6 h-6" />
+            Embed Code
+          </Button>
+        </div>
 
         {/* Features Grid */}
         {features.length === 0 ? (

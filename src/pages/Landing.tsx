@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Rocket, Zap, Globe, TrendingUp } from "lucide-react";
 import heroImage from "@/assets/hero-rocket.jpg";
+import logo from "@/assets/logo.png";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ const Landing = () => {
         <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
           <div className="inline-block glass px-4 py-2 rounded-full mb-4">
             <p className="text-sm text-primary font-medium">Announce Features Everywhere 🚀</p>
+          </div>
+          
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <img src={logo} alt="Feature Blast Logo" className="w-20 h-20 animate-float" />
           </div>
           
           <h1 className="text-6xl md:text-8xl font-bold tracking-tight">

@@ -1,4 +1,10 @@
 project_id = "fmozamzewiqooxrenbtp"
 
 [functions.generate-announcements]
-verify_jwt = true
+verify_jwt = false
+
+[functions.embed-script]
+verify_jwt = false
+
+[functions.track-impression]
+verify_jwt = false

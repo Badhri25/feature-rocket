@@ -9,6 +9,9 @@ import Dashboard from "./pages/Dashboard";
 import CreateFeature from "./pages/CreateFeature";
 import FeatureDetail from "./pages/FeatureDetail";
 import Pricing from "./pages/Pricing";
+import Analytics from "./pages/Analytics";
+import Team from "./pages/Team";
+import EmbedSetup from "./pages/EmbedSetup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +29,9 @@ const App = () => (
           <Route path="/create" element={<CreateFeature />} />
           <Route path="/feature/:id" element={<FeatureDetail />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/embed-setup" element={<EmbedSetup />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
