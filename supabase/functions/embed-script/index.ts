@@ -44,6 +44,18 @@ serve(async (req) => {
   const PRIMARY_COLOR = "${color}";
   const FEATURES = ${JSON.stringify(features || [])};
 
+  // Sanitize HTML to prevent XSS
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+
   // Create popup modal
   function createPopup(feature) {
     const popup = document.createElement('div');
@@ -52,11 +64,11 @@ serve(async (req) => {
       <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 999999; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s;">
         <div style="background: white; border-radius: 16px; padding: 32px; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.3s;">
           <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
-            <span style="background: \${PRIMARY_COLOR}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">\${feature.feature_type}</span>
+            <span style="background: \${PRIMARY_COLOR}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">\${escapeHtml(feature.feature_type)}</span>
             <button onclick="document.getElementById('feature-blast-popup').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
           </div>
-          <h2 style="color: #1a1a1a; font-size: 24px; font-weight: bold; margin: 16px 0;">\${feature.title}</h2>
-          <p style="color: #666; line-height: 1.6;">\${feature.description}</p>
+          <h2 style="color: #1a1a1a; font-size: 24px; font-weight: bold; margin: 16px 0;">\${escapeHtml(feature.title)}</h2>
+          <p style="color: #666; line-height: 1.6;">\${escapeHtml(feature.description)}</p>
           <button onclick="trackClick('\${feature.id}'); document.getElementById('feature-blast-popup').remove();" style="background: \${PRIMARY_COLOR}; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 20px; width: 100%;">Got it!</button>
         </div>
       </div>
@@ -77,9 +89,9 @@ serve(async (req) => {
         <div style="padding: 16px; max-height: 300px; overflow-y: auto;">
           \${FEATURES.map(f => \`
             <div style="padding: 12px; border-bottom: 1px solid #eee; cursor: pointer;" onclick="trackClick('\${f.id}')">
-              <div style="font-size: 12px; color: \${PRIMARY_COLOR}; font-weight: 600; margin-bottom: 4px;">\${f.feature_type}</div>
-              <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 4px;">\${f.title}</div>
-              <div style="font-size: 14px; color: #666;">\${f.description.substring(0, 80)}...</div>
+              <div style="font-size: 12px; color: \${PRIMARY_COLOR}; font-weight: 600; margin-bottom: 4px;">\${escapeHtml(f.feature_type)}</div>
+              <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 4px;">\${escapeHtml(f.title)}</div>
+              <div style="font-size: 14px; color: #666;">\${escapeHtml(f.description.substring(0, 80))}...</div>
             </div>
           \`).join('')}
         </div>

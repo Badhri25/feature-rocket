@@ -14,6 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { z } from "zod";
+
+const featureSchema = z.object({
+  title: z.string().trim().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
+  description: z.string().trim().min(1, "Description is required").max(1000, "Description must be less than 1000 characters"),
+  feature_type: z.enum(["new", "update", "fix"], { errorMap: () => ({ message: "Please select a valid feature type" }) }),
+});
 
 const CreateFeature = () => {
   const [title, setTitle] = useState("");
@@ -26,10 +33,18 @@ const CreateFeature = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title || !description || !type) {
+    // Validate input using zod schema
+    const validation = featureSchema.safeParse({
+      title,
+      description,
+      feature_type: type,
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
       toast({
-        title: "Missing fields",
-        description: "Please fill in all fields",
+        title: "Validation Error",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
@@ -49,9 +64,9 @@ const CreateFeature = () => {
         .from("features")
         .insert([
           {
-            title,
-            description,
-            feature_type: type,
+            title: validation.data.title,
+            description: validation.data.description,
+            feature_type: validation.data.feature_type,
             user_id: user.id,
           },
         ])
@@ -103,6 +118,7 @@ const CreateFeature = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={loading}
+                maxLength={100}
                 className="glass mt-2"
               />
             </div>
@@ -115,6 +131,7 @@ const CreateFeature = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={loading}
+                maxLength={1000}
                 rows={5}
                 className="glass mt-2"
               />

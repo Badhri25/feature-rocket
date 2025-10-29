@@ -21,9 +21,33 @@ serve(async (req) => {
       );
     }
 
+    // Validate impression type
+    if (type !== "view" && type !== "click") {
+      return new Response(
+        JSON.stringify({ error: "Invalid impression type. Must be 'view' or 'click'" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Validate that feature exists and belongs to the claimed user
+    const { data: feature, error: featureError } = await supabase
+      .from("features")
+      .select("user_id")
+      .eq("id", featureId)
+      .eq("user_id", uid)
+      .single();
+
+    if (featureError || !feature) {
+      console.error("Invalid feature or unauthorized:", featureError);
+      return new Response(
+        JSON.stringify({ error: "Invalid feature or unauthorized" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // Insert impression
     const { error: insertError } = await supabase
